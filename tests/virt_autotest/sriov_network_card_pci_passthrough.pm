@@ -55,7 +55,7 @@ sub run_test {
     my @host_pfs;
     @host_pfs = find_sriov_ethernet_devices();
     if (@host_pfs == ()) {
-        $self->{test_results}->{host}->{"Error: there is no SR-IOV ethernet devices in the host!"}->{status} = 'FAILED';
+        $self->{test_results}->{host}->{"Error: there are not SR-IOV ethernet devices in the host, or no carrier for them!"}->{status} = 'FAILED';
         return 1;
     }
     record_info("Find SR-IOV devices", "@host_pfs");
