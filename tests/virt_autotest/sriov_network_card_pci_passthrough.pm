@@ -54,10 +54,6 @@ sub run_test {
     #get the SR-IOV device BDF and interface
     my @host_pfs;
     @host_pfs = find_sriov_ethernet_devices();
-    if (@host_pfs == ()) {
-        $self->{test_results}->{host}->{"Error: there is no SR-IOV ethernet devices in the host!"}->{status} = 'FAILED';
-        return 1;
-    }
     record_info("Find SR-IOV devices", "@host_pfs");
 
     #get/set nessisary variables for test
@@ -188,6 +184,7 @@ sub find_sriov_ethernet_devices {
             push @sriov_devices, $_ if (script_run("ifup $nic") == 0);
         }
     }
+    die "Error: there is no SR-IOV ethernet devices in the host, or no carrier for SR-IOV ethernet cards!" if @sriov_devices == ();
     return @sriov_devices;
 }
 
