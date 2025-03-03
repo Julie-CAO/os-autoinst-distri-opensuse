@@ -263,8 +263,7 @@ If the file doesn't exists on the instance, B<no> error is thrown.
 
 sub upload_log {
     my ($self, $remote_file, %args) = @_;
-
-    my $tmpdir = script_output('mktemp -d');
+    my $tmpdir = script_output_retry('mktemp -d');
     my $dest = $tmpdir . '/' . basename($remote_file);
     my $ret = $self->scp('remote:' . $remote_file, $dest);
     upload_logs($dest, %args) if (defined($ret) && $ret == 0);
@@ -866,6 +865,13 @@ sub do_systemd_analyze_time {
     push @ret, extract_blame_time($output);
 
     return @ret;
+}
+
+sub upload_supportconfig_log {
+    my ($self, %args) = @_;
+    $self->ssh_script_run(cmd => 'sudo supportconfig -R /var/tmp -B supportconfig -x AUDIT', timeout => 7200);
+    $self->ssh_script_run(cmd => 'sudo chmod 755 /var/tmp/scc_supportconfig.txz', timeout => 3600);
+    $self->upload_log('/var/tmp/scc_supportconfig.txz', failok => 1);
 }
 
 1;

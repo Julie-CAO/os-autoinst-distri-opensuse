@@ -151,7 +151,7 @@ sub patch_logfile {
 }
 
 sub fix_tmp {
-    my $override_conf = << 'EOF';
+    my $override_conf = <<'EOF';
 [Unit]
 ConditionPathExists=/var/tmp
 
@@ -208,22 +208,30 @@ sub selinux_hack {
 }
 
 sub bats_post_hook {
+    my $test_dir = shift;
+
     select_serial_terminal;
 
-    script_run('findmnt > /tmp/findmnt.txt');
-    upload_logs('/tmp/findmnt.txt');
+    my $log_dir = "/tmp/logs/";
+    assert_script_run "mkdir -p $log_dir";
+    assert_script_run "cd $log_dir";
 
-    script_run('df -h > /tmp/df-h.txt');
-    upload_logs('/tmp/df-h.txt');
+    script_run "rm -rf $test_dir";
 
-    script_run('dmesg > /tmp/dmesg.txt');
-    upload_logs('/tmp/dmesg.txt');
+    script_run('df -h > df-h.txt');
+    script_run('dmesg > dmesg.txt');
+    script_run('findmnt > findmnt.txt');
+    script_run('rpm -qa | sort > rpm-qa.txt');
+    script_run('systemctl > systemctl.txt');
+    script_run('systemctl status > systemctl-status.txt');
+    script_run('systemctl list-unit-files > systemctl_units.txt');
+    script_run('journalctl -b > journalctl-b.txt', timeout => 120);
+    script_run('tar zcf containers-conf.tgz $(find /etc/containers /usr/share/containers -type f)');
 
-    script_run('rpm -qa | sort > /tmp/rpm-qa.txt');
-    upload_logs('/tmp/rpm-qa.txt');
-
-    script_run('journalctl -b > /tmp/journalctl-b.txt', timeout => 120);
-    upload_logs('/tmp/journalctl-b.txt');
+    my @logs = split /\s+/, script_output "ls";
+    for my $log (@logs) {
+        upload_logs($log_dir . $log);
+    }
 
     upload_logs('/var/log/audit/audit.log', log_name => "audit.txt");
 }
