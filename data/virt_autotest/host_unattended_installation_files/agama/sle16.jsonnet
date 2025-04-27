@@ -94,23 +94,6 @@
           chmod 600 /root/.ssh/id_rsa
           echo '{{_SECRET_RSA_PUB_KEY}}' > /root/.ssh/id_rsa.pub
         |||
-      },
-      {
-        name: "Config_br0",
-        chroot: true,
-        body: |||
-          #!/usr/bin/env bash
-          #echo -e "[Match]\nDriver=bridge\n\n[Link]\nMACAddressPolicy=none" > /etc/systemd/network/98-default-bridge.link
-          #zypper -n --gpg-auto-import-keys install virt-bridge-setup 
-        |||
-      }
-    ],
-    init: [
-      {
-        name: "Setup_br0",
-        body: |||
-          #zypper -n --gpg-auto-import-keys install virt-bridge-setup
-        |||
       }
     ]
   }
