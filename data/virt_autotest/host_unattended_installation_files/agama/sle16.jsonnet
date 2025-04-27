@@ -94,6 +94,14 @@
           chmod 600 /root/.ssh/id_rsa
           echo '{{_SECRET_RSA_PUB_KEY}}' > /root/.ssh/id_rsa.pub
         |||
+      },
+      {
+        name: "Setup br0",
+        chroot: true,
+        content: |||
+          #!/usr/bin/env bash
+          virt-bridge-setup -m --stp no -d
+        |||
       }
     ]
   }
