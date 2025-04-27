@@ -103,7 +103,15 @@
           #!/usr/bin/env bash
           echo "julie: for debug only to see if init script was executed"
           date > julie.dat
+          echo ""
+          echo "ip a"
+          ip a
+          echo ""
+          echo "nmcli con"
+          nmcli con
           virt-bridge-setup -m --stp no -d
+          ip a
+          nmcli con
         |||
       }
     ]
