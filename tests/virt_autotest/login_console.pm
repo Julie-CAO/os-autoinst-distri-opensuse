@@ -261,6 +261,41 @@ sub login_to_console {
         assert_script_run('getconf PAGESIZE');
     }
 
+    # julie debug
+    unless (is_s390x or !is_agama) {
+        record_info("Julie debug begin", "");
+        script_run("lsblk");
+        script_run("zypper lr -u");
+	#script_run('find /var/log/agama-installation/scripts/');
+	script_run('cd /var/log/agama-installation/scripts/; tar cvfz agama_script_logs.tar.gz *');
+	upload_logs('/var/log/agama-installation/scripts/agama_script_logs.tar.gz');
+        script_run("rpm -qa | grep spice");
+        script_run("cat /etc/systemd/network/98-default-bridge.link");
+        script_run("rpm -q virt-bridge-setup");
+        script_run("zypper info virt-bridge-setup");
+        # Update with dev repo
+	script_run("zypper --gpg-auto-import-keys ar https://download.opensuse.org/repositories/openSUSE:Factory/standard/ openSUSE:Factory.repo");
+	script_run("zypper --gpg-auto-import-keys ref");
+        script_run("zypper -n --gpg-auto-import-keys install virt-bridge-setup");
+        script_run("rpm -q virt-bridge-setup");
+        script_run("zypper info virt-bridge-setup");
+        script_run("cat /etc/systemd/network/98-default-bridge.link");
+        # end of install
+        script_run("which virt-bridge-setup");
+        script_run("nmcli con");
+        script_run("ip a");
+	#julie no set up below
+	#	script_run("virt-bridge-setup -m");
+	#        enter_cmd("nmcli con; echo DONE > /dev/$serialdev");
+	#        unless (defined(wait_serial 'DONE', timeout => 30)) {
+	#            reconnect_when_ssh_console_broken;
+	#        }
+	#        script_run("cat /etc/systemd/network/98-default-bridge.link");
+	#        script_run("nmcli con");
+	#        script_run("ip a");
+        record_info("End of debug", "");
+    }
+
     # double-check xen role for xen host
     double_check_xen_role if (is_xen_host and !get_var('REBOOT_AFTER_UPGRADE'));
     check_kvm_modules if is_x86_64 and is_kvm_host and !get_var('REBOOT_AFTER_UPGRADE');
