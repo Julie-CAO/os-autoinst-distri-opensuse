@@ -70,6 +70,12 @@ sub run {
         record_info 'Wait for installation phase done';
         verify_agama_auto_install_done_cmdline();
         upload_agama_logs();
+#        script_run('agama logs store -d /tmp');
+#        script_run('agama config show > /tmp/agama_config.txt');
+#        # Julie debug
+#        record_info('journal_agama', script_output("journalctl -u agama"));
+#        upload_logs('/tmp/agama-logs.tar.gz');
+#        upload_logs('/tmp/agama_config.txt');
         record_info 'Reboot system to disk boot';
         enter_cmd 'reboot';
         # Swith back to sol console, then user can monitor the boot log
