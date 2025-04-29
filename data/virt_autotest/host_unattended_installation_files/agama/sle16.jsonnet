@@ -110,30 +110,17 @@
           echo "~# nmcli con"
           nmcli con
           echo ""
-#          echo "~# virt-bridge-setup -m --stp no -d"
-#          virt-bridge-setup --stp no -d
-#          echo ""
-#          echo "~# ip a"
-#          ip a
-#          echo ""
-#          echo "~# nmcli con"
-#          nmcli con
-#          echo ""
-#          echo "Trying again ...."
-#          date
-#          sleep 5
-#          date
-#          echo "~# nmcli connection up ens7f0np0-slave"
-#          nmcli connection up ens7f0np0-slave
-#          echo ""
-#          echo "~# ip a"
-#          ip a
-#          echo ""
-#          echo "~# nmcli con"
-#          nmcli con
-#          echo ""
-#          echo "~# journalctl -e | tail -30"
-#          journalctl -e | tail -30
+          #          echo "~# virt-bridge-setup -m --stp no -d"
+          #          virt-bridge-setup --stp no -d
+          #          echo ""
+          #          echo "~# ip a"
+          #          ip a
+          #          echo ""
+          #          echo "~# nmcli con"
+          #          nmcli con
+          #          echo ""
+          #          echo "~# journalctl -e | tail -30"
+          #          journalctl -e | tail -30
         |||
       }
     ]
