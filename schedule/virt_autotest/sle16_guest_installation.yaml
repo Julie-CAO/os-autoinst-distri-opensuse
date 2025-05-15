@@ -8,4 +8,5 @@ schedule:
     - virt_autotest/prepare_non_transactional_server
     - virt_autotest/unified_guest_installation
     - virt_autotest/set_config_as_glue
+    - virt_autotest/sev_es_guest_verification
     - virt_autotest/uefi_guest_verification
