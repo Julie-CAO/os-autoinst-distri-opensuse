@@ -287,7 +287,9 @@ sub login_to_console {
 	        }
 	script_run("nmcli con");
 	script_run("ip a");
+	script_run("ls -l");
 	script_run("cat /etc/NetworkManager/system-connections/my-br0.nmconnection");
+	script_run("cat /etc/NetworkManager/system-connections/*slave.nmconnection");
         record_info("End of debug", "");
     }
 
