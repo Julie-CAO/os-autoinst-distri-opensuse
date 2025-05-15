@@ -280,7 +280,7 @@ sub login_to_console {
         script_run("ip a");
 	script_run("cat /etc/NetworkManager/system-connections/my-br0.nmconnection");
 	#julie no set up below
-	enter_cmd("virt-bridge-setup -m");
+	enter_cmd("virt-bridge-setup -m --stp no -d");
         enter_cmd("nmcli con; echo DONE > /dev/$serialdev");
 	       unless (defined(wait_serial 'DONE', timeout => 30)) {
 	            reconnect_when_ssh_console_broken;
