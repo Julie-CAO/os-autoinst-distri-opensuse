@@ -17,7 +17,7 @@
     <guest_vcpus>2,maxvcpus=4</guest_vcpus>
     <guest_cpumodel>host-model</guest_cpumodel>
     <guest_metadata/>
-    <guest_boot_settings>loader=/usr/share/qemu/ovmf-x86_64-sev.bin,hd,bootmenu.enable=yes,menu=on,loader.readonly=yes,loader.type=pflash,,loader.secure=no,loader.stateless=yes</guest_boot_settings>
+    <guest_boot_settings>loader=/usr/share/qemu/ovmf-x86_64-sev.bin,hd,bootmenu.enable=yes,menu=on,loader.readonly=yes,loader.type=pflash,loader.secure=yes,loader.stateless=yes</guest_boot_settings>
     <guest_secure_boot>true</guest_secure_boot>
     <guest_xpath/>
     <guest_installation_automation_method>autoagama</guest_installation_automation_method>
