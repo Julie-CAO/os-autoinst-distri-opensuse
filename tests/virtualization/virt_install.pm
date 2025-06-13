@@ -29,8 +29,7 @@ sub run {
     wait_still_screen;
     x11_start_program('vncviewer :0', target_match => 'virtman-gnome_virt-install', match_timeout => 100);
     # closing all windows
-    # julie debug
-    #send_key 'alt-f4' for (0 .. 2);
+    send_key 'alt-f4' for (0 .. 2);
     sleep 3600;
 }
 
