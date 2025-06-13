@@ -18,9 +18,12 @@ sub run {
     become_root;
     script_run('virt-install --name TESTING --osinfo detect=on,require=off --memory 512 --disk none --boot cdrom --graphics vnc &', 0);
     wait_still_screen(15);
+    send_key('ret') if check_screen('allow-inhibiting-shortcuts', 10);
     x11_start_program('vncviewer :0', target_match => 'virtman-gnome_virt-install', match_timeout => 100);
     # closing all windows
-    send_key 'alt-f4' for (0 .. 2);
+    # julie debug
+    #send_key 'alt-f4' for (0 .. 2);
+    sleep 3600;
 }
 
 1;
