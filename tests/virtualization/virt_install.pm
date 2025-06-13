@@ -19,22 +19,21 @@ sub run {
     script_run('virt-install --name TESTING --osinfo detect=on,require=off --memory 512 --disk none --boot cdrom --graphics vnc &', 0);
     wait_still_screen(15);
     if (check_screen('allow-inhibiting-shortcuts', 10)) {
-        send_key('left');
-        save_screenshot;
+	    #        send_key('left');
         send_key('ret');
         save_screenshot;
     }
-    send_key "alt-f2";
-    sleep 2;
-    save_screenshot;
-    send_key "super";
+    send_key "super" for (0 .. 2);
+    record_info("Typed 3 times 'super'", "");
     sleep 1;
     save_screenshot;
     send_key "alt-f2";
+    record_info("Typed 'alt-f2'", "");
     sleep 1;
     save_screenshot;
     send_key "super-f2";
     sleep 1;
+    record_info("Typed 'super-f2'", "");
     save_screenshot;
 
     #send_key "shift-f12";
