@@ -40,7 +40,7 @@ sub run {
     #    send_key "super-alt-f4";
     #    record_info("Typed 'super-alt-f4'", "");
     #    save_screenshot;
-    x11_start_program('vncviewer :0', target_match => 'virtman-gnome_virt-install', match_timeout => 100);
+    x11_start_program('vncviewer :0 -Shared', target_match => 'virtman-gnome_virt-install', match_timeout => 100);
     # closing all windows
     send_key 'alt-f4' for (0 .. 2);
 }
