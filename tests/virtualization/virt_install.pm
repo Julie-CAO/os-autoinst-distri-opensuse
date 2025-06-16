@@ -20,7 +20,7 @@ sub run {
     save_screenshot;
     # Choose either of the two options to turn off the pop up
     if (check_screen('allow-inhibiting-shortcuts', 10)) {
-        send_key('left');
+    #        send_key('left');
         send_key('ret');
     }
     wait_still_screen;
