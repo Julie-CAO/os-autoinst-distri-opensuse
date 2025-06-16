@@ -30,7 +30,6 @@ sub run {
     x11_start_program('vncviewer :0', target_match => 'virtman-gnome_virt-install', match_timeout => 100);
     # closing all windows
     send_key 'alt-f4' for (0 .. 2);
-    sleep 3600;
 }
 
 1;
