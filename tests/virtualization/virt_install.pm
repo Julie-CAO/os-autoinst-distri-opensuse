@@ -18,7 +18,7 @@ sub run {
     become_root;
     script_run('virt-install --name TESTING --osinfo detect=on,require=off --memory 512 --disk none --boot cdrom --graphics vnc &', 0);
     #script_run('virt-install --name TESTING --osinfo detect=on,require=off --memory 512 --disk none --boot cdrom --graphics vnc --noautoconsole &', 0);
-    wait_still_screen(15);
+    #    wait_still_screen(15);
     if (check_screen('allow-inhibiting-shortcuts', 10)) {
         send_key('left');
         send_key('ret');
