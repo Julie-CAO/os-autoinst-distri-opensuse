@@ -21,14 +21,14 @@ sub run {
     save_screenshot;
     #    wait_still_screen(15);
     if (check_screen('allow-inhibiting-shortcuts', 10)) {
-    #        send_key('left');
+        send_key('left');
         send_key('ret');
         save_screenshot;
     }
-    send_key "super-esc" for (0 .. 2);
-    record_info("Typed 3 times 'super'", "");
-    sleep 1;
-    save_screenshot;
+    #    send_key "super-esc" for (0 .. 2);
+    #    record_info("Typed 3 times 'super'", "");
+    #    sleep 1;
+    #    save_screenshot;
     #    send_key "super-alt-f2";
     #    record_info("Typed 'super-alt-f2'", "");
     #    sleep 1;
