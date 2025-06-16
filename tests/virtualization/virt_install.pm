@@ -18,16 +18,17 @@ sub run {
     become_root;
     script_run('virt-install --name TESTING --osinfo detect=on,require=off --memory 512 --disk none --boot cdrom --graphics vnc &', 0);
     #script_run('virt-install --name TESTING --osinfo detect=on,require=off --memory 512 --disk none --boot cdrom --graphics vnc --noautoconsole &', 0);
+    save_screenshot;
     #    wait_still_screen(15);
     if (check_screen('allow-inhibiting-shortcuts', 10)) {
-        send_key('left');
+    #        send_key('left');
         send_key('ret');
         save_screenshot;
     }
-    #    send_key "super" for (0 .. 2);
-    #    record_info("Typed 3 times 'super'", "");
-    #    sleep 1;
-    #    save_screenshot;
+    send_key "super-esc" for (0 .. 2);
+    record_info("Typed 3 times 'super'", "");
+    sleep 1;
+    save_screenshot;
     #    send_key "super-alt-f2";
     #    record_info("Typed 'super-alt-f2'", "");
     #    sleep 1;
