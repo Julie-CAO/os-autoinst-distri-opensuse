@@ -21,13 +21,14 @@ sub run {
     save_screenshot;
     if (check_screen('allow-inhibiting-shortcuts', 10)) {
         send_key('left');
-        send_key('ret');
         save_screenshot;
+        send_key('ret');
     }
-    wait_still_screen(15);
+    wait_still_screen;
     save_screenshot;
     record_info("Typing 'alt-f4' to close current console", "");
-    send_key "alt-f4";
+    send_key 'alt-f4';
+    wait_still_screen;
     save_screenshot;
     #    send_key "super-esc" for (0 .. 2);
     #    record_info("Typed 3 times 'super'", "");
