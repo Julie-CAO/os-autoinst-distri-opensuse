@@ -264,18 +264,13 @@ sub login_to_console {
     # julie debug
     unless (is_s390x or !is_agama) {
         record_info("Julie debug begin", "");
-	#script_run("lsblk");
-        script_run("zypper lr -u");
-	#script_run('find /var/log/agama-installation/scripts/');
-        script_run("cat /etc/systemd/network/98-default-bridge.link");
         script_run("rpm -q virt-bridge-setup");
-        script_run("zypper info virt-bridge-setup");
         # end of install
         script_run("nmcli con");
         script_run("ip a");
 	script_run("cat /etc/NetworkManager/system-connections/my-br0.nmconnection");
 	#julie set up br0
-	enter_cmd("nohup virt-bridge-setup -m --stp no -d 2>&1 & | tee virt-bridge-setup.output");
+	enter_cmd("virt-bridge-setup -m --stp no -d 2>&1 & | tee virt-bridge-setup.output");
 	enter_cmd("nmcli con; echo DONE > /dev/$serialdev");
 	unless (defined(wait_serial 'DONE', timeout => 30)) {
 	   reconnect_when_ssh_console_broken;
