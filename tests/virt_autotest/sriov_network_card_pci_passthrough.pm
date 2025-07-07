@@ -96,7 +96,6 @@ sub run_test {
         save_network_device_status_logs($guest, "2-after_hotplug_$vfs[0]->{host_id}");
         #check the networking of the plugged interface
         #use br123 as ssh connection
-	print "julie debug: calling test_network_interface($guest, gate => $gateway, mac => $vfs[0]->{vm_mac}, net => 'br123');\n";
         test_network_interface($guest, gate => $gateway, mac => $vfs[0]->{vm_mac}, net => 'br123');
 
         #unplug the first vf from vm
