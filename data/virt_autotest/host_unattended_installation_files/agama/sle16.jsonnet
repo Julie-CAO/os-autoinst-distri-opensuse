@@ -98,12 +98,9 @@
     ],
     init: [
       {
-        name: "Setup br0",
+        name: "Setup_br0",
         content: |||
           #!/usr/bin/env bash
-          echo "julie: for debug only to see if init script was executed"
-          date > julie.dat
-          echo ""
           echo "~# ip a"
           ip a
           echo ""
