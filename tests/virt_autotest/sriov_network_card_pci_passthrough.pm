@@ -48,7 +48,7 @@ sub run_test {
     @host_pfs = find_sriov_ethernet_devices();
 
     #get/set necessary variables for test
-    my $gateway = script_output "ip r s | grep 'default via' | cut -d ' ' -f3";
+    my $gateway = script_output "ip r s | grep 'default via' | cut -d ' ' -f3 | sort -u";
 
     # enable 8 vfs for the SR-IOV device on host
     my @host_vfs = enable_vf(@host_pfs);
@@ -96,6 +96,7 @@ sub run_test {
         save_network_device_status_logs($guest, "2-after_hotplug_$vfs[0]->{host_id}");
         #check the networking of the plugged interface
         #use br123 as ssh connection
+	print "julie debug: calling test_network_interface($guest, gate => $gateway, mac => $vfs[0]->{vm_mac}, net => 'br123');\n";
         test_network_interface($guest, gate => $gateway, mac => $vfs[0]->{vm_mac}, net => 'br123');
 
         #unplug the first vf from vm
