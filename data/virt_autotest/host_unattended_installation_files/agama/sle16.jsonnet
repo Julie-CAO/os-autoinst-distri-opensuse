@@ -101,6 +101,7 @@
         name: "Setup_br0",
         content: |||
           #!/usr/bin/env bash
+          date
           echo "~# ip a"
           ip a
           echo ""
@@ -109,6 +110,8 @@
           echo ""
           echo "~# nohup virt-bridge-setup -m --stp no -d 2>&1 | tee virt-bridge-setup.output"
           nohup virt-bridge-setup -m --stp no -d 2>&1 | tee virt-bridge-setup.output
+          echo "********* sleeping 60 seconds ************** "
+          sleep 60
           echo ""
           echo "~# ip a"
           ip a
@@ -116,7 +119,7 @@
           echo "~# nmcli con"
           nmcli con
           echo ""
-          echo "~# journalctl -e | tail -30"
+          echo "~# journalctl -e -u NetworkManager -u kernel | tail -30"
           journalctl -e | tail -30
         |||
       }
