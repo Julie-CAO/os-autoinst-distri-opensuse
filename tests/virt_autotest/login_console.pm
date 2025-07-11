@@ -100,6 +100,15 @@ sub check_kvm_modules {
     record_info("KVM", "kvm modules are loaded!");
 }
 
+# Set up br0 with virt-bridge-setup tool
+# It is not recommended to run remotely over ssh session, so the workaround is used at here
+# refer to https://susedoc.github.io/release-notes/sles-16.0/html/release-notes/index.html#v160-virt-bridge-setup
+sub setup_br0 {
+    enter_cmd("nohup virt-bridge-setup -m --stp no -d 2>&1 | tee virt-bridge-setup.output");
+    enter_cmd("nmcli con; echo DONE > /dev/$serialdev");
+    reconnect_when_ssh_console_broken unless (defined(wait_serial 'DONE', timeout => 30));
+}
+
 #Explanation for parameters introduced to facilitate offline host upgrade:
 #OFFLINE_UPGRADE indicates whether host upgrade is offline which needs reboot
 #the host and upgrade from installation media. Please refer to this document:
@@ -269,12 +278,9 @@ sub login_to_console {
         script_run("nmcli con");
         script_run("ip a");
 	script_run("cat /etc/NetworkManager/system-connections/my-br0.nmconnection");
-	#julie set up br0
+    # Setup br0
+    setup_br0 if is_sle('16+') and !is_s390x and get_var('VIRT_AUTOTEST');
 	#	enter_cmd("nohup virt-bridge-setup -m --stp no -d 2>&1 | tee virt-bridge-setup.output");
-	enter_cmd("nmcli con; echo DONE > /dev/$serialdev");
-	unless (defined(wait_serial 'DONE', timeout => 30)) {
-	   reconnect_when_ssh_console_broken;
-	}
 	script_run("journalctl -e | tail -30");
 	script_run("nmcli con");
 	script_run("ip a");
