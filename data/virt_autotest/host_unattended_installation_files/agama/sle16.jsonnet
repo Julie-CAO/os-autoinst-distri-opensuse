@@ -109,7 +109,7 @@
           nmcli con
           echo ""
           echo "~# nohup virt-bridge-setup -m --stp no -d 2>&1 | tee virt-bridge-setup.output"
-          nohup virt-bridge-setup -m --stp no -d 2>&1 | tee virt-bridge-setup.output
+          virt-bridge-setup -m --stp no -d & 2>&1
           echo "********* sleeping 60 seconds ************** "
           sleep 60
           echo ""
@@ -119,8 +119,8 @@
           echo "~# nmcli con"
           nmcli con
           echo ""
-          echo "~# journalctl -e -u NetworkManager -u kernel | tail -30"
-          journalctl -e | tail -30
+          echo "~# journalctl -u NetworkManager -u kernel | tail -30"
+          journalctl -u NetworkManager -u kernel | tail -30
         |||
       }
     ]
