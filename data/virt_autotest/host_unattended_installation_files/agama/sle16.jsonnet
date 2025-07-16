@@ -95,34 +95,6 @@
           echo '{{_SECRET_RSA_PUB_KEY}}' > /root/.ssh/id_rsa.pub
         |||
       }
-    ],
-    init: [
-      {
-        name: "Setup_br0",
-        content: |||
-          #!/usr/bin/env bash
-          date
-          echo "~# ip a"
-          ip a
-          echo ""
-          echo "~# nmcli con"
-          nmcli con
-          echo ""
-          echo "~# nohup virt-bridge-setup -m --stp no -d 2>&1 | tee virt-bridge-setup.output"
-          virt-bridge-setup -m --stp no -d & 2>&1
-          echo "********* sleeping 60 seconds ************** "
-          sleep 60
-          echo ""
-          echo "~# ip a"
-          ip a
-          echo ""
-          echo "~# nmcli con"
-          nmcli con
-          echo ""
-          echo "~# journalctl -u NetworkManager -u kernel | tail -30"
-          journalctl -u NetworkManager -u kernel | tail -30
-        |||
-      }
     ]
   }
 }
