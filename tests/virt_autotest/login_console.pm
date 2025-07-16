@@ -100,22 +100,29 @@ sub check_kvm_modules {
     record_info("KVM", "kvm modules are loaded!");
 }
 
-# Set up br0 with virt-bridge-setup tool
-# It is not recommended to run remotely over ssh session, so the workaround is used at here
+# Set up br0 with virt-bridge-setup tool over sol console
 # refer to https://susedoc.github.io/release-notes/sles-16.0/html/release-notes/index.html#v160-virt-bridge-setup
 sub setup_br0 {
-    select_console 'sol', await_console => 0;
-    send_key 'ret';
-    check_screen([qw(linux-login virttest-displaymanager)], 60);
-    save_screenshot;
-    send_key 'ret';
+    record_info("setting up br0", "over sol console");
+    select_console 'sol', await_console => 1;
+    send_key 'ret' if check_screen('sol-console-wait-typing-ret');
+    if (check_screen('text-login')) {
+        enter_cmd "root";
+        assert_screen "password-prompt";
+        type_password;
+        send_key 'ret';
+    }
+    assert_screen "text-logged-in-root";
     enter_cmd("virt-bridge-setup -m --stp no -d 2>&1 | tee virt-bridge-setup.output");
     enter_cmd("nmcli con; echo DONE > /dev/$serialdev");
     enter_cmd("ip a");
     sleep 30;
     enter_cmd("ip a");
     enter_cmd("nmcli con");
-    #    reconnect_when_ssh_console_broken unless (defined(wait_serial 'DONE', timeout => 30));
+    sleep 30;
+    enter_cmd("ip a");
+    enter_cmd("nmcli con");
+    record_info("End", "of setting up br0 on sol console");
 }
 
 #Explanation for parameters introduced to facilitate offline host upgrade:
