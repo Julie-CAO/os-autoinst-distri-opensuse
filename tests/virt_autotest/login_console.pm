@@ -114,7 +114,7 @@ sub setup_br0 {
     }
     assert_screen "text-logged-in-root";
     # enter_cmd("virt-bridge-setup -m --stp no -d 2>&1 | tee virt-bridge-setup.output");
-    enter_cmd("virt-bridge-setup -m -d");
+    enter_cmd("virt-bridge-setup -d");
     save_screenshot;
     enter_cmd("nmcli con; echo DONE > /dev/$serialdev");
     save_screenshot;
