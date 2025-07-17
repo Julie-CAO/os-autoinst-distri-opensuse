@@ -114,14 +114,21 @@ sub setup_br0 {
     }
     assert_screen "text-logged-in-root";
     enter_cmd("virt-bridge-setup -m --stp no -d 2>&1 | tee virt-bridge-setup.output");
+    save_screenshot;
     enter_cmd("nmcli con; echo DONE > /dev/$serialdev");
+    save_screenshot;
     enter_cmd("ip a");
+    save_screenshot;
     sleep 30;
     enter_cmd("ip a");
+    save_screenshot;
     enter_cmd("nmcli con");
+    save_screenshot;
     sleep 30;
     enter_cmd("ip a");
+    save_screenshot;
     enter_cmd("nmcli con");
+    save_screenshot;
     record_info("End", "of setting up br0 on sol console");
 }
 
