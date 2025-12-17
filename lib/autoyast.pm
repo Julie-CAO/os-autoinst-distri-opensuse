@@ -730,7 +730,9 @@ sub expand_variables {
             set_var('WORKER_IP', inet_ntoa(inet_aton(get_var 'WORKER_HOSTNAME')));
         }
         # Skip if value is not defined
+	print "julie: get_var(\$var) = " . get_var($var) . "\n";
         next unless my ($value) = get_var($var);
+	print "julie: \$value = $value\n";
         $profile =~ s/\{\{$var\}\}/$value/g;
     }
     return $profile;
