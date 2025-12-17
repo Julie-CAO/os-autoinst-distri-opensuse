@@ -235,6 +235,7 @@ sub run {
         record_info('NIC', script_output('ip a'));
     }
     record_info("Julie", script_output("cat /proc/sys/kernel/printk", proceed_on_failure => 1));
+    record_info("Julie", script_output("cat /sys/module/printk/parameters/ignore_loglevel", proceed_on_failure => 1));
     record_info("Julie", script_output("cat /boot/grub2/grub.cfg", proceed_on_failure => 1));
     record_info("Julie", script_output("dmesg -x | grep debug", proceed_on_failure => 1));
 }
