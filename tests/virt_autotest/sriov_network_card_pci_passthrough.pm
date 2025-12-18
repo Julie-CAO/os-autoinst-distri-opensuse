@@ -71,7 +71,7 @@ sub run_test {
 
     # Turn down these VFs
     record_info("Julie Turning down VFs", "");
-    script_run("for dev_path in /sys/class/net/*; do if [ -e \"\$dev_path/device/physfn\" ]; then dev=\$(basename \$dev); echo \"\$dev is a Virtual Function (VF)\"; nmcli device set \$dev managed no; ip a flush dev \$dev; fi; done");
+    script_run("for dpath in /sys/class/net/*; do if [ -e \"\$dpath/device/physfn\" ]; then dev=\$(basename \$dpath); echo \"\$dev is a Virtual Function (VF)\"; nmcli device set \$dev managed no; ip a flush dev \$dev; fi; done");
     record_info("Julie nmcli device status", script_output("nmcli device status"
 , proceed_on_failure => 1));
     record_info("Julie nmcli con", script_output("nmcli con", proceed_on_failure => 1));

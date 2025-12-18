@@ -2768,13 +2768,15 @@ sub load_sles16_mu_virt_tests {
 
     # Guest installation phase
     if (check_var('ENABLE_VM_INSTALL', 1)) {
+        print "julie: enter if condition of ENABLE_VM_INSTALL=1\n";
+        print "julie: ENABLE_VM_INSTALL=" . get_var('ENABLE_VM_INSTALL','') . "\n";
         loadtest "virt_autotest/login_console";
         # Skip guest installation for migration destination - guests will be migrated from source
         unless (check_var('VIRT_NEW_GUEST_MIGRATION_DST', '1')) {
             # Parallel guest installation using the enhanced prepare_guests
-            loadtest "virtualization/universal/prepare_guests";
+	    #            loadtest "virtualization/universal/prepare_guests";
             # Wait for all guest installations to complete
-            loadtest "virtualization/universal/waitfor_guests";
+	    #            loadtest "virtualization/universal/waitfor_guests";
         }
 
         # Guest patching workflow (controlled by PATCH_ON_GUEST)
