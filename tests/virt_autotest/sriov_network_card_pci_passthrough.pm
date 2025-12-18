@@ -65,8 +65,17 @@ sub run_test {
         reset_consoles;
         select_console('root-ssh');
     }
-    script_run("ip a");
-    script_run("nmcli con");
+    record_info("After enable VF", script_output("ip a", proceed_on_failure => 1));
+    record_info("nmcli con", script_output("nmcli con", proceed_on_failure => 1));
+    record_info("Julie nmcli device status", script_output("nmcli device status", proceed_on_failure => 1));
+
+    # Turn down these VFs
+    record_info("Julie Turning down VFs", "");
+    script_run("for dev_path in /sys/class/net/*; do if [ -e \"\$dev_path/device/physfn\" ]; then dev=\$(basename \$dev); echo \"\$dev is a Virtual Function (VF)\"; nmcli device set \$dev managed no; ip a flush dev \$dev; fi; done");
+    record_info("Julie nmcli device status", script_output("nmcli device status"
+, proceed_on_failure => 1));
+    record_info("Julie nmcli con", script_output("nmcli con", proceed_on_failure => 1));
+    record_info("Julie ip a", script_output("ip a", proceed_on_failure => 1));
 
     # Restore /etc/resolv.conf after VFs are created
     assert_script_run("cp /etc/resolv_before_enable_vf.conf /etc/resolv.conf");
@@ -320,10 +329,41 @@ sub detach_vf_from_host {
     if (is_sle('16+')) {
         script_run("nmcli con");
         script_run("journalctl --cursor-file /tmp/cursor.txt -u NetworkManager | grep -e 'timeout' -e 'failure' -e 'failed to acquire D-Bus name' -e 'critical'");
+	#        script_run("systemctl restart NetworkManager");
+        record_info("Julie", script_output("journalctl --no-pager --cursor-file /tmp/cursor.txt", proceed_on_failure => 1));
+        record_info("Julie", script_output("ip a", proceed_on_failure => 1));
+        record_info("Julie", script_output("ip r", proceed_on_failure => 1));
     }
-
+    #    if (check_var('SUT_IP', 'zoe.qe.prg2.suse.org')) {
+    #        record_info("Output of detach", script_output("virsh -d 0 nodedev-detach $device_id", proceed_on_failure => 1));
+    #    } else {
+    #
     #detach from host
-    assert_script_run "virsh nodedev-detach $device_id";
+    #    assert_script_run "virsh nodedev-detach $device_id";
+    #julie debug:
+    #        record_info("SOL console", "");
+    #        reset_consoles;
+    #        select_console 'sol', await_console => 1;
+    #        send_key 'ret' if check_screen('sol-console-wait-typing-ret');
+    #        if (check_screen('text-login')) {
+    #            enter_cmd "root";
+    #            assert_screen "password-prompt";
+    #            type_password;
+    #            send_key 'ret';
+    #        }
+    #        assert_screen "text-logged-in-root";
+    #        enter_cmd("date");
+    #        enter_cmd("virsh -d 0 nodedev-detach $device_id");
+    #	wait_still_screen 10;
+    #        save_screenshot;
+    #    }
+
+    record_info("Detach", script_output("date; virsh -d 0 nodedev-detach $device_id", proceed_on_failure => 1));
+    record_info("Julie", script_output("journalctl --no-pager --cursor-file /tmp/cursor.txt", proceed_on_failure => 1));
+    record_info("Julie", script_output("ip a", proceed_on_failure => 1));
+    record_info("Julie", script_output("ls -l /var/log/libvirt/", proceed_on_failure => 1));
+    record_info("Julie", script_output("cat /var/log/libvirt/virtnodedevd.log", proceed_on_failure => 1));
+    record_info("Julie", script_output("cat /var/log/libvirt/virtqemud.log", proceed_on_failure => 1));
     record_info("Detach VF from host", "$device_id");
 
     return $device_id;
@@ -456,11 +496,26 @@ sub post_fail_hook {
             enter_cmd("systemctl status NetworkManager --no-pager");
             wait_still_screen 1;
             save_screenshot;
+            enter_cmd("ls -l /var/log/libvirt/");
+            wait_still_screen 1;
+            save_screenshot;
+            enter_cmd("cat /var/log/libvirt/virtnodedevd.log");
+            wait_still_screen 1;
+            save_screenshot;
+            enter_cmd("cat /var/log/libvirt/virtqemud.log");
+            wait_still_screen 1;
+            save_screenshot;
         }
         # Any NM comman will hung at here, and restarting NM is unhelpful, even make the host hung
         # So determine not to run them here to keep the host sol console vailable
         return;
     }
+
+    record_info("libvirt", script_output("ls -l /var/log/libvirt/", proceed_on_failure => 1));
+    record_info("nodedevd", script_output("cat /var/log/libvirt/virtnodedevd.log", proceed_on_failure => 1));
+    record_info("qemud", script_output("cat /var/log/libvirt/virtqemud.log", proceed_on_failure => 1));
+    record_info("nodedevd", script_output("cat /etc/libvirt/virtnodedevd.conf", proceed_on_failure => 1));
+    record_info("qemud", script_output("cat /etc/libvirt/virtqemud.conf", proceed_on_failure => 1));
 
     foreach (keys %virt_autotest::common::guests) {
         save_network_device_status_logs($_, "post_fail_hook");
