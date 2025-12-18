@@ -130,7 +130,9 @@ sub run_test {
 	#        unplug_vf_from_vm($guest, $vfs[0]);
 	#        check_guest_health($guest);
         assert_script_run("virsh nodedev-reattach $vfs[0]->{host_id}", 60);
-        record_info("Reattach VF to host", "vm=$guest \nvf=$vfs[0]->{host_id}");
+	#record_info("Reattach VF to host", "vm=$guest \nvf=$vfs[0]->{host_id}");
+	record_info("Reattach VF to host", "vf=$vfs[0]->{host_id}"); #julie
+
 	#        save_network_device_status_logs($guest, "3-after_hot_unplug_$vfs[0]->{host_id}");
 
         #plug the remaining vfs to vm
