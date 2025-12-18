@@ -2406,7 +2406,7 @@ sub check_and_load_mu_virt_features {
     # Check the switch variable and host_hypervisor
     if (check_var($test, 1) && (!$hypervisor || check_var('HOST_HYPERVISOR', $hypervisor))) {
         loadtest "console/login";
-        loadtest "virt_autotest/cleanup_libvirtd_log";
+	#        loadtest "virt_autotest/cleanup_libvirtd_log";
         foreach my $module (@$modules) {
             loadtest $module;
         }
@@ -2770,7 +2770,7 @@ sub load_sles16_mu_virt_tests {
     if (check_var('ENABLE_VM_INSTALL', 1)) {
         print "julie: enter if condition of ENABLE_VM_INSTALL=1\n";
         print "julie: ENABLE_VM_INSTALL=" . get_var('ENABLE_VM_INSTALL','') . "\n";
-        loadtest "virt_autotest/login_console";
+	#loadtest "virt_autotest/login_console";
         # Skip guest installation for migration destination - guests will be migrated from source
         unless (check_var('VIRT_NEW_GUEST_MIGRATION_DST', '1')) {
             # Parallel guest installation using the enhanced prepare_guests

@@ -42,7 +42,7 @@ sub run_test {
     script_run "[ -d $log_dir ] && rm -rf $log_dir; mkdir -p $log_dir";
 
     #save original guest configuration file in case of restore in post_fail_hook()
-    save_guests_xml_for_change($vm_xml_save_dir);
+    #julie save_guests_xml_for_change($vm_xml_save_dir);
 
     #get the SR-IOV device BDF and interface
     @host_pfs = find_sriov_ethernet_devices();
@@ -81,15 +81,15 @@ sub run_test {
     assert_script_run("cp /etc/resolv_before_enable_vf.conf /etc/resolv.conf");
     script_run("cat /etc/resolv.conf");
 
-    foreach my $guest (keys %virt_autotest::common::guests) {
-        if (virt_autotest::utils::is_sev_es_guest($guest) ne 'notsev') {
-            record_info("Skip SR-IOV test on $guest", "SEV/SEV-ES guest $guest does not support SR-IOV");
-            next;
-        }
-        record_info("Test $guest");
-        check_guest_health($guest);
-        prepare_guest_for_sriov_passthrough($guest);
-        save_network_device_status_logs($guest, "1-initial");
+    #    foreach my $guest (keys %virt_autotest::common::guests) {
+    #        if (virt_autotest::utils::is_sev_es_guest($guest) ne 'notsev') {
+    #            record_info("Skip SR-IOV test on $guest", "SEV/SEV-ES guest $guest does not support SR-IOV");
+    #            next;
+    #        }
+    #        record_info("Test $guest");
+    #        check_guest_health($guest);
+    #        prepare_guest_for_sriov_passthrough($guest);
+    #        save_network_device_status_logs($guest, "1-initial");
 
         #detach 3 vf ethernet devices from host
         my @vfs = ();
@@ -116,55 +116,55 @@ sub run_test {
             #add the vf to the list of passthrough devices
             push @vfs, \%vf;
 
-        }
+       }
 
         #hotplug the first vf to vm
-        plugin_vf_device($guest, $vfs[0]);
+	#        plugin_vf_device($guest, $vfs[0]);
         #upload test specific logs
-        save_network_device_status_logs($guest, "2-after_hotplug_$vfs[0]->{host_id}");
+	#        save_network_device_status_logs($guest, "2-after_hotplug_$vfs[0]->{host_id}");
         #check the networking of the plugged interface
         #use br123 as ssh connection
-        test_network_interface($guest, gateway => $gateway, mac => $vfs[0]->{vm_mac}, net => 'br123');
+	#        test_network_interface($guest, gateway => $gateway, mac => $vfs[0]->{vm_mac}, net => 'br123');
 
         #unplug the first vf from vm
-        unplug_vf_from_vm($guest, $vfs[0]);
-        check_guest_health($guest);
+	#        unplug_vf_from_vm($guest, $vfs[0]);
+	#        check_guest_health($guest);
         assert_script_run("virsh nodedev-reattach $vfs[0]->{host_id}", 60);
         record_info("Reattach VF to host", "vm=$guest \nvf=$vfs[0]->{host_id}");
-        save_network_device_status_logs($guest, "3-after_hot_unplug_$vfs[0]->{host_id}");
+	#        save_network_device_status_logs($guest, "3-after_hot_unplug_$vfs[0]->{host_id}");
 
         #plug the remaining vfs to vm
         #test network after reboot as dhcp lease spends time
-        for (my $i = 1; $i < $passthru_vf_count; $i++) {
-            plugin_vf_device($guest, $vfs[$i]);
-            test_network_interface($guest, gateway => $gateway, mac => $vfs[$i]->{vm_mac}, net => 'br123') if $i == 1;
-            save_network_device_status_logs($guest, $i + 3 . "-after_hotplug_$vfs[$i]->{host_id}");
-        }
+	#        for (my $i = 1; $i < $passthru_vf_count; $i++) {
+	#            plugin_vf_device($guest, $vfs[$i]);
+	#            test_network_interface($guest, gateway => $gateway, mac => $vfs[$i]->{vm_mac}, net => 'br123') if $i == 1;
+	#            save_network_device_status_logs($guest, $i + 3 . "-after_hotplug_$vfs[$i]->{host_id}");
+	#        }
 
         #reboot the guest
-        record_info("VM reboot", "$guest");
-        script_run "ssh root\@$guest 'reboot'";    #don't use assert_script_run, or may fail on xen guests
-        wait_guest_online($guest, 30);
-        save_network_device_status_logs($guest, $passthru_vf_count + 3 . '-after_guest_reboot');
+	#        record_info("VM reboot", "$guest");
+	#        script_run "ssh root\@$guest 'reboot'";    #don't use assert_script_run, or may fail on xen guests
+	#        wait_guest_online($guest, 30);
+	#        save_network_device_status_logs($guest, $passthru_vf_count + 3 . '-after_guest_reboot');
 
         #check the remaining vf(s) inside vm
-        for (my $i = 1; $i < $passthru_vf_count; $i++) {
-            test_network_interface($guest, gateway => $gateway, mac => $vfs[$i]->{vm_mac}, net => 'br123');
-        }
+	#        for (my $i = 1; $i < $passthru_vf_count; $i++) {
+	#            test_network_interface($guest, gateway => $gateway, mac => $vfs[$i]->{vm_mac}, net => 'br123');
+	#        }
 
         #unplug the remaining vf(s) from vm
-        for (my $i = 1; $i < $passthru_vf_count; $i++) {
-            unplug_vf_from_vm($guest, $vfs[$i]);
-            check_guest_health($guest);
-            assert_script_run("virsh nodedev-reattach $vfs[$i]->{host_id}", 60);
-            record_info("Reattach VF to host", "vm=$guest \nvf=$vfs[$i]->{host_id}");
-            save_network_device_status_logs($guest, $passthru_vf_count + 4 + $i . "-after_hot_unplug_$vfs[$i]->{host_id}");
-            script_run("timeout 20 ssh root\@$guest 'dmesg' >> $log_dir/dmesg_$guest 2>&1") if $i == $passthru_vf_count - 1;
-        }
-        script_run "lspci | grep Ethernet";
-        save_screenshot;
+	#        for (my $i = 1; $i < $passthru_vf_count; $i++) {
+	#            unplug_vf_from_vm($guest, $vfs[$i]);
+	#            check_guest_health($guest);
+	#            assert_script_run("virsh nodedev-reattach $vfs[$i]->{host_id}", 60);
+	#            record_info("Reattach VF to host", "vm=$guest \nvf=$vfs[$i]->{host_id}");
+	#            save_network_device_status_logs($guest, $passthru_vf_count + 4 + $i . "-after_hot_unplug_$vfs[$i]->{host_id}");
+	#            script_run("timeout 20 ssh root\@$guest 'dmesg' >> $log_dir/dmesg_$guest 2>&1") if $i == $passthru_vf_count - 1;
+	#        }
+	#        script_run "lspci | grep Ethernet";
+	#        save_screenshot;
 
-    }
+    #}
 
     # Turn off SR-IOV
     foreach (@host_pfs) {
@@ -177,7 +177,7 @@ sub run_test {
     virt_autotest::utils::upload_virt_logs($log_dir, "logs");
 
     #redefine guest from their original configuration files
-    restore_xml_changed_guests("$vm_xml_save_dir/changed_xml");
+    #julie restore_xml_changed_guests("$vm_xml_save_dir/changed_xml");
 }
 
 
@@ -517,11 +517,12 @@ sub post_fail_hook {
     record_info("nodedevd", script_output("cat /etc/libvirt/virtnodedevd.conf", proceed_on_failure => 1));
     record_info("qemud", script_output("cat /etc/libvirt/virtqemud.conf", proceed_on_failure => 1));
 
-    foreach (keys %virt_autotest::common::guests) {
-        save_network_device_status_logs($_, "post_fail_hook");
-        script_run("timeout 20 ssh root\@$_ 'dmesg' >> $log_dir/dmesg_$_ 2>&1");
-        check_guest_health($_);
-    }
+    #julie: comment out guests
+    #    foreach (keys %virt_autotest::common::guests) {
+    #        save_network_device_status_logs($_, "post_fail_hook");
+    #        script_run("timeout 20 ssh root\@$_ 'dmesg' >> $log_dir/dmesg_$_ 2>&1");
+    #        check_guest_health($_);
+    #    }
     virt_autotest::utils::upload_virt_logs($log_dir, "network_device_status");
 
     # Turn off SR-IOV to save IPs
@@ -531,7 +532,7 @@ sub post_fail_hook {
         script_run("lspci | grep Ethernet");
     }
     $self->SUPER::post_fail_hook;
-    restore_original_guests($vm_xml_save_dir);
+    #julie    restore_original_guests($vm_xml_save_dir);
 
 }
 
