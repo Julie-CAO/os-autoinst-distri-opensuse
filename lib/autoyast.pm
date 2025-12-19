@@ -731,6 +731,7 @@ sub expand_variables {
         }
         # Skip if value is not defined
         next unless my ($value) = get_var($var);
+	print "julie: \$value=get_var(\$var)=$value\n";
         $profile =~ s/\{\{$var\}\}/$value/g;
     }
     return $profile;

@@ -72,7 +72,10 @@ sub run_test {
 
     # Turn down these VFs
     record_info("Julie Turning down VFs", "");
+    # Remove IPs only
     script_run("for dpath in /sys/class/net/*; do if [ -e \"\$dpath/device/physfn\" ]; then dev=\$(basename \$dpath); echo \"Flush \$dev's IP as it is a Virtual Function (VF)\"; nmcli device set \$dev managed no; ip a flush dev \$dev; fi; done");
+    # Bring down the interfaces thoroughly
+    script_run("for dpath in /sys/class/net/*; do if [ -e \"\$dpath/device/physfn\" ]; then dev=\$(basename \$dpath); echo \"Bring DOWN \$dev as it is a Virtual Function (VF)\"; nmcli device disconnect \$dev; nmcli device set \$dev managed no; ip l set \$dev down; fi; done");
     record_info("Julie nmcli device status", script_output("nmcli device status"
 , proceed_on_failure => 1));
     record_info("Julie nmcli con", script_output("nmcli con", proceed_on_failure => 1));
