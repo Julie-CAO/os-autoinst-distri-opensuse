@@ -68,10 +68,11 @@ sub run_test {
     record_info("After enable VF", script_output("ip a", proceed_on_failure => 1));
     record_info("nmcli con", script_output("nmcli con", proceed_on_failure => 1));
     record_info("Julie nmcli device status", script_output("nmcli device status", proceed_on_failure => 1));
+    record_info("Julie", script_output("ll /etc/NetworkManager/system-connections/", proceed_on_failure => 1));
 
     # Turn down these VFs
     record_info("Julie Turning down VFs", "");
-    script_run("for dpath in /sys/class/net/*; do if [ -e \"\$dpath/device/physfn\" ]; then dev=\$(basename \$dpath); echo \"\$dev is a Virtual Function (VF)\"; nmcli device set \$dev managed no; ip a flush dev \$dev; fi; done");
+    script_run("for dpath in /sys/class/net/*; do if [ -e \"\$dpath/device/physfn\" ]; then dev=\$(basename \$dpath); echo \"Flush \$dev's IP as it is a Virtual Function (VF)\"; nmcli device set \$dev managed no; ip a flush dev \$dev; fi; done");
     record_info("Julie nmcli device status", script_output("nmcli device status"
 , proceed_on_failure => 1));
     record_info("Julie nmcli con", script_output("nmcli con", proceed_on_failure => 1));

@@ -215,8 +215,8 @@ sub expand_template {
     my $template = Mojo::Template->new(vars => 1);
     # kernel incidents use special test module to install the update, install
     # only the last released version
-    set_var('MAINT_TEST_REPO', get_var('INCIDENT_REPO'))
-      if get_var('INCIDENT_REPO') && get_var('FLAVOR', '') !~ m/Incidents-Kernel/;
+    set_var('MAINT_TEST_REPO', get_var('INCIDENT_REPO', ''))
+      if get_var('INCIDENT_REPO', '') && get_var('FLAVOR', '') !~ m/Incidents-Kernel/;
     my $vars = {
         addons => expand_addons,
         repos => [split(/,/, get_var('MAINT_TEST_REPO', ''))],
@@ -730,9 +730,7 @@ sub expand_variables {
             set_var('WORKER_IP', inet_ntoa(inet_aton(get_var 'WORKER_HOSTNAME')));
         }
         # Skip if value is not defined
-	print "julie: get_var($var) = " . get_var($var) . "\n";
         next unless my ($value) = get_var($var);
-	print "julie: \$value = $value\n";
         $profile =~ s/\{\{$var\}\}/$value/g;
     }
     return $profile;
