@@ -717,7 +717,7 @@ sub expand_variables {
     if (is_agama && get_var('STAGING', '')) {
         # For sle16+ MU tests, we use dynamic agama file to fit different repos
         # see poo#188319
-        push @vars, 'INCIDENT_REPO';
+        push @vars, 'INCIDENT_REPO' if get_var('INCIDENT_REPO', '');
     }
     # Push more variables to expand from the job setting
     my @extra_vars = push @vars, split(/,/, get_var('AY_EXPAND_VARS', ''));

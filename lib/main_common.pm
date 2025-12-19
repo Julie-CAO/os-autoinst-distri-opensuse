@@ -2664,10 +2664,13 @@ sub set_sles16_mu_virt_vars {
     set_var('ENABLE_HOST_INSTALLATION', '1') unless get_var('ENABLE_HOST_INSTALLATION');
     #julie    set_var('ENABLE_VM_INSTALL', '1') unless get_var('ENABLE_VM_INSTALL');
     print "julie: ENABLE_VM_INSTALL=" . get_var('ENABLE_VM_INSTALL') . "\n";
-    unless (get_var('ENABLE_VM_INSTALL')) {
+    unless (get_var('ENABLE_VM_INSTALL', '') or check_var('ENABLE_VM_INSTALL', '0')) {
 	print "julie: setting ENABLE_VM_INSTALL=1\n";
         set_var('ENABLE_VM_INSTALL', '1');
 	print "julie: ENABLE_VM_INSTALL=" . get_var('ENABLE_VM_INSTALL') . "\n";
+    }
+    if (!get_var('ENABLE_VM_INSTALL', '')) {
+	print "julie: enter !get_var('ENABLE_VM_INSTALL', '')\n";
     }
 
     diag("SLES16 MU variables configured: test_mode=staging, install_type=$install_type, host_install=" .
