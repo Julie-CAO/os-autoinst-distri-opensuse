@@ -23,11 +23,11 @@
     <guest_installation_automation_platform></guest_installation_automation_platform>
     <guest_installation_automation_file>sles_16_plus_kvm_hvm_guest_non_encrypted_storage_x86_64.jsonnet</guest_installation_automation_file>
     <guest_installation_method>location</guest_installation_method>
-    <guest_installation_extra_args>live.password=novell#console=ttyS0,115200#loglevel=5#plymouth.enable=0#ignore_loglevel root=live:http://openqa.suse.de/assets/repo/SLES-16.1-Full-x86_64-Build27.2.install/LiveOS/squashfs.img inst.install_url=http://openqa.suse.de/assets/repo/SLES-16.1-x86_64-Build27.2/ inst.register_url=http://all-27.2.proxy.scc.suse.de inst.auto=http://10.146.4.45:8666/unattended_installation_sles-16-1-64-kvm-hvm-uefi-agama-full-repo_sles_16_plus_kvm_hvm_guest_non_encrypted_storage_x86_64.jsonnet inst.finish=stop</guest_installation_extra_args>
+    <guest_installation_extra_args>live.password=novell#console=ttyS0,115200#loglevel=5#plymouth.enable=0#ignore_loglevel</guest_installation_extra_args>
     <guest_installation_wait/>
     <guest_installation_method_others/>
     <guest_installation_media>http://openqa.suse.de/assets/iso/SLES-16.1-Online-x86_64-Build12345.install.iso</guest_installation_media>
-    <guest_installation_fine_grained_media/>
+    <guest_installation_fine_grained_media>http://openqa.suse.de/assets/repo/SLES-16.1-Online-x86_64-Build12345.install/</guest_installation_fine_grained_media>
     <guest_installation_fine_grained_repos/>
     <guest_installation_fine_grained_kernel_args>live.password=novell console=ttyS0,115200</guest_installation_fine_grained_kernel_args>
     <guest_installation_fine_grained_kernel_args_overwrite/>
