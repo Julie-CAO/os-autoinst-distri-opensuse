@@ -1500,7 +1500,7 @@ sub config_guest_installation_method {
         my $_guest_arch = ($self->{guest_arch} ? $self->{guest_arch} : get_required_var('ARCH'));
         if (script_output("curl --silent -I $_guest_installation_fine_grained_media | grep -E \"^HTTP\" | awk -F \" \" \'{print \$2}\'") == "200") {
             #julie debug
-            if ($self->{guest_installation_method} eq 'directkernel' or is_sle('=12sp5')) {
+            if ($self->{guest_installation_method} eq 'directkernel' or is_sle('=12-SP5')) {
                 assert_script_run("curl -s -o $self->{guest_image_folder}/linux $_guest_installation_fine_grained_media/boot/$_guest_arch/loader/linux");
                 assert_script_run("curl -s -o $self->{guest_image_folder}/initrd $_guest_installation_fine_grained_media/boot/$_guest_arch/loader/initrd");
             }
@@ -1535,7 +1535,11 @@ sub config_guest_installation_method {
         $self->{guest_installation_fine_grained_kernel_args} .= ' inst.install_url=' . $_guest_installation_fine_grained_repos if (is_agama_guest(guest => $self->{guest_name}) and $_guest_installation_fine_grained_repos ne '');
     }
     elsif ($self->{guest_installation_method} eq 'location') {
-        $self->{guest_installation_method_options} .= ' --location ' . $_guest_installation_media;
+        if (is_sle("=12-SP5")) {
+	    $self->{guest_installation_method_options} .= ' --location ' . $self->{guest_image_folder};
+        } else {
+            $self->{guest_installation_method_options} .= ' --location ' . $_guest_installation_media;
+        }
         $self->{guest_installation_method_options} .= ",$self->{guest_installation_method_others}" if ($self->{guest_installation_method_others} ne '');
         $self->{guest_installation_extra_args} .= '#root=live:' . $_guest_installation_fine_grained_media if ($_guest_installation_fine_grained_media ne '');
         $self->{guest_installation_extra_args} .= '#inst.install_url=' . $_guest_installation_fine_grained_repos if (is_agama_guest(guest => $self->{guest_name}) and $_guest_installation_fine_grained_repos ne '');
