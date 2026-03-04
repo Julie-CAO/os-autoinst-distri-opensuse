@@ -1529,14 +1529,13 @@ sub config_guest_installation_method {
 
     if ($self->{guest_installation_method} eq 'directkernel') {
         $self->{guest_installation_method_options} .= ' --install ' if !is_sle('=12-SP5');
-	 $self->{guest_installation_method_options} .= 'kernel=' . $self->{guest_image_folder} . '/linux,initrd=' . $self->{guest_image_folder} . '/initrd';
+        $self->{guest_installation_method_options} .= 'kernel=' . $self->{guest_image_folder} . '/linux,initrd=' . $self->{guest_image_folder} . '/initrd';
         $self->{guest_installation_method_options} .= ',' . $self->{guest_installation_fine_grained_others} if ($self->{guest_installation_fine_grained_others} ne '');
         $self->{guest_installation_fine_grained_kernel_args} .= ' root=live:' . $_guest_installation_media;
         $self->{guest_installation_fine_grained_kernel_args} .= ' inst.install_url=' . $_guest_installation_fine_grained_repos if (is_agama_guest(guest => $self->{guest_name}) and $_guest_installation_fine_grained_repos ne '');
     }
     elsif ($self->{guest_installation_method} eq 'location') {
         $self->{guest_installation_method_options} .= ' --location ' . $_guest_installation_media;
-        }
         $self->{guest_installation_method_options} .= ",$self->{guest_installation_method_others}" if ($self->{guest_installation_method_others} ne '');
         $self->{guest_installation_extra_args} .= '#root=live:' . $_guest_installation_fine_grained_media if ($_guest_installation_fine_grained_media ne '');
         $self->{guest_installation_extra_args} .= '#inst.install_url=' . $_guest_installation_fine_grained_repos if (is_agama_guest(guest => $self->{guest_name}) and $_guest_installation_fine_grained_repos ne '');
