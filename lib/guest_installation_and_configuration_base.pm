@@ -2182,7 +2182,7 @@ sub config_guest_installation_command {
     my $self = shift;
 
     $self->reveal_myself;
-    if (is_sle('=12-SP5') {
+    if (is_sle('=12-SP5')) {
         $self->{guest_boot_options} .= ",$self->{guest_installation_method_options} $self->{guest_installation_automation_options}";
         $self->{guest_installation_method_options} = '';
         $self->{guest_installation_automation_options} = '';
