@@ -1536,7 +1536,8 @@ sub config_guest_installation_method {
     }
     elsif ($self->{guest_installation_method} eq 'location') {
         if (is_sle("=12-SP5")) {
-	    $self->{guest_installation_method_options} .= ' --location ' . $self->{guest_image_folder};
+		#	    $self->{guest_installation_method_options} .= ' --location ' . $self->{guest_image_folder};
+		print "julie: no any options\n";
         } else {
             $self->{guest_installation_method_options} .= ' --location ' . $_guest_installation_media;
         }
