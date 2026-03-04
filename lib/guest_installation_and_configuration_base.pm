@@ -1499,8 +1499,7 @@ sub config_guest_installation_method {
         $_guest_installation_fine_grained_media = render_autoinst_url(url => $self->{guest_installation_fine_grained_media});
         my $_guest_arch = ($self->{guest_arch} ? $self->{guest_arch} : get_required_var('ARCH'));
         if (script_output("curl --silent -I $_guest_installation_fine_grained_media | grep -E \"^HTTP\" | awk -F \" \" \'{print \$2}\'") == "200") {
-            #julie debug
-            if ($self->{guest_installation_method} eq 'directkernel' or is_sle('=12-SP5')) {
+            if ($self->{guest_installation_method} eq 'directkernel') {
                 assert_script_run("curl -s -o $self->{guest_image_folder}/linux $_guest_installation_fine_grained_media/boot/$_guest_arch/loader/linux");
                 assert_script_run("curl -s -o $self->{guest_image_folder}/initrd $_guest_installation_fine_grained_media/boot/$_guest_arch/loader/initrd");
             }
@@ -1529,17 +1528,14 @@ sub config_guest_installation_method {
     $self->{guest_installation_method_options} = '--noautoconsole' if ($self->{guest_noautoconsole} eq 'true');
 
     if ($self->{guest_installation_method} eq 'directkernel') {
-        $self->{guest_installation_method_options} .= ' --install kernel=' . $self->{guest_image_folder} . '/linux,initrd=' . $self->{guest_image_folder} . '/initrd';
+        $self->{guest_installation_method_options} .= ' --install ' if !is_sle('=12-SP5');
+	 $self->{guest_installation_method_options} .= 'kernel=' . $self->{guest_image_folder} . '/linux,initrd=' . $self->{guest_image_folder} . '/initrd';
         $self->{guest_installation_method_options} .= ',' . $self->{guest_installation_fine_grained_others} if ($self->{guest_installation_fine_grained_others} ne '');
         $self->{guest_installation_fine_grained_kernel_args} .= ' root=live:' . $_guest_installation_media;
         $self->{guest_installation_fine_grained_kernel_args} .= ' inst.install_url=' . $_guest_installation_fine_grained_repos if (is_agama_guest(guest => $self->{guest_name}) and $_guest_installation_fine_grained_repos ne '');
     }
     elsif ($self->{guest_installation_method} eq 'location') {
-        if (is_sle("=12-SP5")) {
-		#	    $self->{guest_installation_method_options} .= ' --location ' . $self->{guest_image_folder};
-		print "julie: no any options\n";
-        } else {
-            $self->{guest_installation_method_options} .= ' --location ' . $_guest_installation_media;
+        $self->{guest_installation_method_options} .= ' --location ' . $_guest_installation_media;
         }
         $self->{guest_installation_method_options} .= ",$self->{guest_installation_method_others}" if ($self->{guest_installation_method_others} ne '');
         $self->{guest_installation_extra_args} .= '#root=live:' . $_guest_installation_fine_grained_media if ($_guest_installation_fine_grained_media ne '');
@@ -2187,6 +2183,11 @@ sub config_guest_installation_command {
     my $self = shift;
 
     $self->reveal_myself;
+    if (is_sle('=12-SP5') {
+        $self->{guest_boot_options} .= ",$self->{guest_installation_method_options} $self->{guest_installation_automation_options};"
+        $self->{guest_installation_method_options} = '';
+        $self->{guest_installation_automation_options} = '';
+    }
     $self->{virt_install_command_line} = "virt-install $self->{guest_virt_options} $self->{guest_platform_options} $self->{guest_name_options} "
       . "$self->{guest_vcpus_options} $self->{guest_memory_options} $self->{guest_numa_options} $self->{guest_cpumodel_options} $self->{guest_metadata_options} "
       . "$self->{guest_os_variant_options} $self->{guest_boot_options} $self->{guest_storage_options} $self->{guest_network_selection_options} "
