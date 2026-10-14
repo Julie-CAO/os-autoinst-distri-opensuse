@@ -350,6 +350,8 @@ sub prepare_non_transactional_environment {
         virt_autotest::utils::setup_rsyslog_host($_host_params{common_log_folder}) if (is_sle('<16'));
         my $_packages_to_check = 'wget curl screen dnsmasq xmlstarlet python3 nmap';
         $_packages_to_check .= ' yast2-schema' if (is_sle('<16'));
+	# julie debug
+        record_info('Julie', script_output("zypper in -y $_packages_to_check", proceed_on_failure => 1));
         zypper_call("install -y $_packages_to_check");
         # There is already the highest version for kvm/xen packages on TW
         zypper_call("install -y -t pattern $self->{host_virt_type}_server $self->{host_virt_type}_tools") if (is_sle);

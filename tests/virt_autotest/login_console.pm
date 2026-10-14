@@ -273,6 +273,9 @@ sub run {
     }
 
     check_host_health();
+
+    # julie debug
+    record_info('Julie', script_output('zypper lr -u', proceed_on_failure => 1));
 }
 
 sub post_fail_hook {
