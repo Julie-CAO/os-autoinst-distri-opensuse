@@ -26,7 +26,7 @@
     <guest_installation_extra_args>live.password=ROOTPASSWORD#console=ttyS0,115200#loglevel=5#plymouth.enable=0#ignore_loglevel</guest_installation_extra_args>
     <guest_installation_wait/>
     <guest_installation_method_others>kernel=boot/x86_64/loader/linux,initrd=boot/x86_64/loader/initrd</guest_installation_method_others>
-    <guest_installation_media>http://openqa.opensuse.org/assets/repo/fixed/Tumbleweed-agama-installer-x86_64-CURRENT</guest_installation_media>
+    <guest_installation_media>http://openqa.opensuse.org/assets/repo/fixed/Tumbleweed-agama-installer-x86_64-CURRENT/</guest_installation_media>
     <guest_installation_fine_grained_media>http://openqa.opensuse.org/assets/repo/fixed/Tumbleweed-agama-installer-x86_64-CURRENT/LiveOS/squashfs.img</guest_installation_fine_grained_media>
     <guest_installation_fine_grained_repos>http://openqa.opensuse.org/assets/repo/openSUSE-Tumbleweed-oss-x86_64-CURRENT</guest_installation_fine_grained_repos>
     <guest_installation_fine_grained_kernel_args/>
