@@ -350,7 +350,7 @@ sub prepare_non_transactional_environment {
         virt_autotest::utils::setup_rsyslog_host($_host_params{common_log_folder}) if (is_sle('<16'));
         my $_packages_to_check = 'wget curl screen dnsmasq xmlstarlet python3 nmap';
         $_packages_to_check .= ' yast2-schema' if (is_sle('<16'));
-	# julie debug
+        # julie debug
         record_info('Julie', script_output("zypper --no-gpg-checks in -y $_packages_to_check", proceed_on_failure => 1));
         zypper_call("--no-gpg-checks install -y $_packages_to_check");
         # There is already the highest version for kvm/xen packages on TW
@@ -1531,7 +1531,7 @@ sub config_guest_installation_method {
     $self->config_guest_installation_media;
     my $_guest_installation_media = render_autoinst_url(url => $self->{guest_installation_media});
     if ($_guest_installation_media =~ /^http\:\/\//im and script_output("curl --silent -I $_guest_installation_media | grep -E \"^HTTP\" | awk -F \" \" \'{print \$2}\'") != "200") {
-        record_info("Installation media $_guest_installation_media does not exist", script_output("curl -IvL $_guest_installation_media", proceed_on_failure => 1), result => 'fail');
+        record_info("Installation media $_guest_installation_media does not exist", script_output("curl -svL -o /dev/null $_guest_installation_media 2>&1", proceed_on_failure => 1), result => 'fail');
         $self->record_guest_installation_result('FAILED');
     }
 
